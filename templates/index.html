@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Genre Classifier</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🎵 Music Genre Classifier
+        </div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+    </nav>
+
+    <main class="main-container">
+
+        <div class="upload-card">
+
+            <h1>Music Genre Classification</h1>
+
+            <p class="subtitle">
+                Upload a song 
+            </p>
+
+            <div class="upload-section">
+
+                <input
+                    type="file"
+                    id="audioFile"
+                    name="audio"
+                    accept="audio/*"
+                >
+
+                <p id="fileName">
+                    No audio selected
+                </p>
+
+            </div>
+
+            <audio
+                id="audioPlayer"
+                controls
+                style="display: none;">
+            </audio>
+
+            <button
+                id="predictButton"
+                data-prediction-url="{{ url_for('prediction') }}"
+                disabled>
+                Predict Genre
+            </button>
+
+        </div>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

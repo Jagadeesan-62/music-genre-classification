@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Music Genre Classifier</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">
+        Music Genre Classifier
+    </div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('home') }}">Home</a>
+        <a href="{{ url_for('dashboard') }}" class="active">Dashboard</a>
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+</nav>
+
+<main class="dashboard-container">
+
+    <div class="dashboard-header">
+        <h1>Analytics Dashboard</h1>
+        <p>Your music prediction activity</p>
+    </div>
+
+    <section class="stats-grid">
+        <div class="stat-card">
+            <h3>Total Predictions</h3>
+            <div class="stat-value">{{ total_predictions }}</div>
+            <p>Predictions made</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Most Predicted Genre</h3>
+            <div class="stat-value">{{ most_predicted_genre }}</div>
+            <p>Based on your history</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>Avg. Segment Agreement</h3>
+            <div class="stat-value">{{ avg_agreement }}%</div>
+            <p>Prediction agreement</p>
+        </div>
+    </section>
+
+    <section class="charts-grid">
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>Genre Distribution</h2>
+                <p>Genres predicted from your songs</p>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="genreChart"></canvas>
+            </div>
+        </div>
+
+        <div class="chart-card">
+            <div class="chart-header">
+                <h2>Prediction Activity</h2>
+                <p>Your predictions over time</p>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="activityChart"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="recent-section">
+
+        <div class="section-header">
+            <h2>Recent Predictions</h2>
+
+            <a href="{{ url_for('profile') }}">
+                View History
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Song</th>
+                        <th>Genre</th>
+                        <th>Agreement</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+    {% if recent_predictions %}
+        {% for prediction, audio_file, prediction_result in recent_predictions %}
+            <tr>
+                <td>{{ audio_file.original_filename }}</td>
+                <td><span class="genre-badge">{{ prediction_result.predicted_genre }}</span></td>
+                <td>
+                    {{ ((prediction_result.winning_votes / prediction_result.total_segments) * 100)|round(1) }}%
+                </td>
+                <td>{{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="4">No predictions yet.</td>
+        </tr>
+    {% endif %}
+</tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+const genreLabels = [
+    {% for genre, count in genre_distribution %}
+        "{{ genre }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+const genreData = [
+    {% for genre, count in genre_distribution %}
+        {{ count }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+const activityLabels = [
+    {% for date, count in activity %}
+        "{{ date.strftime('%d %b') }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+const activityData = [
+    {% for date, count in activity %}
+        {{ count }}{% if not loop.last %},{% endif %}
+    {% endfor %}
+];
+
+new Chart(document.getElementById("genreChart"), {
+    type: "doughnut",
+    data: {
+        labels: genreLabels,
+        datasets: [{
+            data: genreData
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: "bottom"
+            }
+        }
+    }
+});
+
+new Chart(document.getElementById("activityChart"), {
+    type: "line",
+    data: {
+        labels: activityLabels,
+        datasets: [{
+            label: "Predictions",
+            data: activityData,
+            tension: 0.3,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    precision: 0
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

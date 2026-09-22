@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Result - Music Genre Classifier</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🎵 Music Genre Classifier
+        </div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+    </nav>
+
+    <main class="main-container">
+
+        <div class="result-card">
+
+            <h1>Prediction Result</h1>
+
+            <p class="result-text">
+                The predicted music genre is
+            </p>
+
+            <h2 class="genre-name">
+                {{ prediction_result.predicted_genre }}
+            </h2>
+
+            <p class="song-name">
+                Song: {{ audio_file.original_filename }}
+            </p>
+
+            <p class="vote-result">
+                Majority Vote:
+                {{ prediction_result.winning_votes }}
+                /
+                {{ prediction_result.total_segments }}
+                segments
+            </p>
+
+            <a href="{{ url_for('home') }}" class="try-again-btn">
+                Analyze Another Song
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

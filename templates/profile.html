@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Profile - Music Genre Classifier</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🎵 Music Genre Classifier
+        </div>
+
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+    </nav>
+
+    <main class="main-container">
+
+        <div class="profile-card">
+
+            <h1>My Profile</h1>
+
+            <div class="user-details">
+
+    <div class="profile-info">
+
+        <h2>User Details</h2>
+
+        <div class="detail-row">
+            <span class="detail-label">Name:</span>
+            <span class="detail-value">{{ user.name }}</span>
+        </div>
+
+        <div class="detail-row">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">{{ user.email }}</span>
+        </div>
+
+    </div>
+
+        </div>
+
+            <br>
+
+            <h2>Prediction History</h2>
+
+            <table class="history-table">
+
+                <thead>
+                    <tr>
+                        <th>Song</th>
+                        <th>Predicted Genre</th>
+                        <th>Votes</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+    {% if predictions %}
+
+        {% for prediction, audio_file, prediction_result in predictions %}
+
+            <tr>
+                <td>{{ audio_file.original_filename }}</td>
+                <td>{{ prediction_result.predicted_genre }}</td>
+                <td>
+                    {{ prediction_result.winning_votes }}/{{ prediction_result.total_segments }}
+                </td>
+                <td>
+                    {{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    {% else %}
+
+        <tr>
+            <td colspan="4">
+                No predictions yet.
+            </td>
+        </tr>
+
+    {% endif %}
+
+</tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

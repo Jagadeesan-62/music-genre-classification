@@ -1,0 +1,17 @@
+{
+  "sample_rate": 22050,
+  "segment_seconds": 3,
+  "segment_samples": 66150,
+  "n_mfcc": 40,
+  "n_mels": 64,
+  "n_fft": 2048,
+  "hop_length": 512,
+  "feature_type": "MFCC + Mel spectrogram",
+  "feature_rows": 104,
+  "normalization_mean": [
+    -26.131750106811523
+  ],
+  "normalization_std": [
+    41.211307525634766
+  ]
+}

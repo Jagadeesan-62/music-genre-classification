@@ -1,0 +1,540 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+}
+
+.navbar {
+    width: 100%;
+    background-color: #1f2937;
+    color: white;
+    padding: 18px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.main-container {
+    min-height: calc(100vh - 65px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+}
+
+.upload-card,
+.result-card,
+.history-card,
+.login-card,
+.signup-card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.upload-card {
+    width: 520px;
+    text-align: center;
+}
+
+.upload-card h1 {
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.upload-section {
+    margin: 25px 0;
+}
+
+#audioFile {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fafafa;
+}
+
+#fileName {
+    margin-top: 15px;
+    color: #555;
+}
+
+#audioPlayer {
+    width: 100%;
+    margin: 20px 0;
+}
+
+#predictButton {
+    width: 100%;
+    padding: 13px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#predictButton:hover {
+    background-color: #1d4ed8;
+}
+
+#predictButton:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.result-card {
+    width: 500px;
+    text-align: center;
+}
+
+.result-card h1 {
+    margin-bottom: 25px;
+}
+
+.result-text {
+    color: #666;
+}
+
+.genre-name {
+    font-size: 42px;
+    margin: 20px 0;
+    color: #2563eb;
+    text-transform: uppercase;
+}
+
+.song-name {
+    margin: 15px 0;
+}
+
+.vote-result {
+    margin-bottom: 30px;
+    color: #555;
+}
+
+.try-again-btn {
+    display: inline-block;
+    background-color: #2563eb;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+}
+
+.try-again-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.history-card {
+    width: 850px;
+}
+
+.history-card h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.history-card .subtitle {
+    text-align: center;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    border: 1px solid #ddd;
+    padding: 14px;
+    text-align: center;
+}
+
+.history-table th {
+    background-color: #1f2937;
+    color: white;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.login-card,
+.signup-card {
+    width: 430px;
+}
+
+.login-card h1,
+.signup-card h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.login-card h2,
+.signup-card h2 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.login-card .subtitle,
+.signup-card .subtitle {
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.login-btn,
+.signup-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.login-btn:hover,
+.signup-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.account-text {
+    text-align: center;
+    margin-top: 22px;
+    color: #555;
+}
+
+.account-text a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.account-text a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 700px) {
+
+    .navbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-links {
+        gap: 20px;
+    }
+
+    .main-container {
+        padding: 20px;
+    }
+
+    .upload-card,
+    .result-card,
+    .login-card,
+    .signup-card,
+    .history-card {
+        width: 100%;
+        padding: 25px;
+    }
+
+    .history-card {
+        overflow-x: auto;
+    }
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    background-color: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 25px 0 35px 0;
+}
+
+
+
+.profile-info {
+    width: 100%;
+}
+
+.profile-info h2 {
+    margin-bottom: 18px;
+    color: #1f2937;
+}
+
+.detail-row {
+    display: flex;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+}
+
+.detail-label {
+    width: 80px;
+    font-weight: bold;
+    color: #555;
+}
+
+.detail-value {
+    color: #222;
+}
+.profile-card {
+    background-color: white;
+    width: 850px;
+    border-radius: 10px;
+    padding: 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card > h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.profile-card > h2 {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    color: #1f2937;
+}
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 30px;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    margin-bottom: 8px;
+}
+
+.dashboard-header p {
+    color: #777;
+    margin: 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.stat-card h3 {
+    margin: 0 0 15px;
+    font-size: 15px;
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #888;
+    font-size: 13px;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.chart-card {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.chart-header {
+    margin-bottom: 20px;
+}
+
+.chart-header h2 {
+    margin: 0 0 6px;
+    font-size: 19px;
+}
+
+.chart-header p {
+    margin: 0;
+    color: #888;
+    font-size: 13px;
+}
+
+.chart-container {
+    position: relative;
+    height: 280px;
+}
+
+.recent-section {
+    background: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.section-header a {
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 14px;
+    border-bottom: 1px solid #ddd;
+    font-size: 13px;
+    color: #666;
+}
+
+td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.genre-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #f1f1f1;
+    font-size: 12px;
+}
+
+.nav-links a.active {
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .dashboard-container {
+        padding: 25px 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-header {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+}
+.form-error {
+    color: #d32f2f;
+    font-size: 14px;
+    margin: 10px 0;
+}
