@@ -476,5 +476,74 @@ def upload():
         "prediction",
         prediction_id=prediction.id
     ))
+@app.route("/prediction/<int:prediction_id>/delete", methods=["POST"])
+def delete_prediction(prediction_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    prediction = Prediction.query.filter_by(
+        id=prediction_id,
+        user_id=session["user_id"]
+    ).first()
+
+    if not prediction:
+        return "Prediction not found", 404
+
+    audio_file = AudioFile.query.filter_by(
+        id=prediction.audio_file_id,
+        user_id=session["user_id"]
+    ).first()
+
+    db.session.delete(prediction)
+    db.session.commit()
+
+    if audio_file:
+        db.session.delete(audio_file)
+        db.session.commit()
+
+    return redirect(url_for("profile"))
+
+@app.route("/account/delete", methods=["POST"])
+def delete_account():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    user_id = session["user_id"]
+
+    predictions = Prediction.query.filter_by(
+        user_id=user_id
+    ).all()
+
+    audio_file_ids = [
+        prediction.audio_file_id
+        for prediction in predictions
+    ]
+
+    for prediction in predictions:
+        db.session.delete(prediction)
+
+    db.session.commit()
+
+    for audio_file_id in audio_file_ids:
+        audio_file = AudioFile.query.filter_by(
+            id=audio_file_id,
+            user_id=user_id
+        ).first()
+
+        if audio_file:
+            db.session.delete(audio_file)
+
+    db.session.commit()
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+
+    session.clear()
+
+    return redirect(url_for("login"))
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

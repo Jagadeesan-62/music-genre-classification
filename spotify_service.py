@@ -34,7 +34,8 @@ def search_tracks(genre, limit=10):
             "q": f"genre:{genre}",
             "type": "track",
             "limit": limit,
-            "market": "US"
+            "market": "IN",
+            
         }
     )
 

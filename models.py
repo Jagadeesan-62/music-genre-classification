@@ -12,6 +12,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(255))
     auth_provider = db.Column(db.String(20), nullable=False)
     provider_user_id = db.Column(db.String(255))
+    country = db.Column(db.String(2),nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
 
 
@@ -24,6 +25,10 @@ class AudioObject(db.Model):
     file_type = db.Column(db.String(50), nullable=False)
     file_size = db.Column(db.BigInteger, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
+    garbage_marked_at = db.Column(
+        db.DateTime(timezone=True),
+        nullable=True
+    )
 
 
 class AudioFile(db.Model):

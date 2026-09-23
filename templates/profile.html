@@ -36,23 +36,23 @@
 
             <div class="user-details">
 
-    <div class="profile-info">
+                <div class="profile-info">
 
-        <h2>User Details</h2>
+                    <h2>User Details</h2>
 
-        <div class="detail-row">
-            <span class="detail-label">Name:</span>
-            <span class="detail-value">{{ user.name }}</span>
-        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Name:</span>
+                        <span class="detail-value">{{ user.name }}</span>
+                    </div>
 
-        <div class="detail-row">
-            <span class="detail-label">Email:</span>
-            <span class="detail-value">{{ user.email }}</span>
-        </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value">{{ user.email }}</span>
+                    </div>
 
-    </div>
+                </div>
 
-        </div>
+            </div>
 
             <br>
 
@@ -66,41 +66,76 @@
                         <th>Predicted Genre</th>
                         <th>Votes</th>
                         <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
 
-    {% if predictions %}
+                    {% if predictions %}
 
-        {% for prediction, audio_file, prediction_result in predictions %}
+                        {% for prediction, audio_file, prediction_result in predictions %}
 
-            <tr>
-                <td>{{ audio_file.original_filename }}</td>
-                <td>{{ prediction_result.predicted_genre }}</td>
-                <td>
-                    {{ prediction_result.winning_votes }}/{{ prediction_result.total_segments }}
-                </td>
-                <td>
-                    {{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}
-                </td>
-            </tr>
+                            <tr>
+                                <td>
+                                    {{ audio_file.original_filename }}
+                                </td>
 
-        {% endfor %}
+                                <td>
+                                    {{ prediction_result.predicted_genre }}
+                                </td>
 
-    {% else %}
+                                <td>
+                                    {{ prediction_result.winning_votes }}/{{ prediction_result.total_segments }}
+                                </td>
 
-        <tr>
-            <td colspan="4">
-                No predictions yet.
-            </td>
-        </tr>
+                                <td>
+                                    {{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}
+                                </td>
 
-    {% endif %}
+                                <td>
+                                    <form method="POST"
+                                          action="{{ url_for('delete_prediction', prediction_id=prediction.id) }}">
 
-</tbody>
+                                        <button type="submit" class="delete-btn">
+                                            Delete
+                                        </button>
+
+                                    </form>
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="5">
+                                No predictions yet.
+                            </td>
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
 
             </table>
+
+            <div class="account-actions">
+
+                <h2>Account</h2>
+
+                <form method="POST"
+                      action="{{ url_for('delete_account') }}"
+                      onsubmit="return confirm('Are you sure you want to delete your account?');">
+
+                    <button type="submit" class="delete-account-btn">
+                        Delete Account
+                    </button>
+
+                </form>
+
+            </div>
 
         </div>
 
