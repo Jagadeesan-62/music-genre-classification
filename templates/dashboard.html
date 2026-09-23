@@ -9,6 +9,109 @@
           href="{{ url_for('static', filename='css/style.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+.music-discovery {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.music-discovery-header {
+    margin-bottom: 18px;
+}
+
+.music-discovery-header h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+}
+
+.music-discovery-header p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+.music-discovery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.music-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.music-card-image {
+    width: 90px !important;
+    height: 90px !important;
+    min-width: 90px;
+    max-width: 90px;
+    object-fit: cover;
+    border-radius: 7px;
+    display: block;
+}
+
+.music-card-body {
+    flex: 1;
+    min-width: 0;
+}
+
+.music-card-body h3 {
+    margin: 0 0 5px;
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-card-body p {
+    margin: 0 0 4px;
+    font-size: 13px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-card-body span {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.music-card-button {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 5px;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    font-size: 11px;
+}
+
+.music-card-button:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 700px) {
+    .music-discovery-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -76,9 +179,47 @@
                 <canvas id="activityChart"></canvas>
             </div>
         </div>
-
+    
     </section>
+    <section class="music-discovery">
+    <div class="music-discovery-header">
+        <h2>Discover More</h2>
+        <p>Based on your most predicted genre: <strong>{{ most_predicted_genre|title }}</strong></p>
+    </div>
 
+    {% if spotify_tracks %}
+        <div class="music-discovery-grid">
+            {% for track in spotify_tracks %}
+                <div class="music-card">
+                    <img
+                        src="{{ track.image }}"
+                        alt="{{ track.name }}"
+                        class="music-card-image"
+                    >
+
+                    <div class="music-card-body">
+                        <h3>{{ track.name }}</h3>
+                        <p>{{ track.artist }}</p>
+                        <span>{{ track.album }}</span>
+
+                        <a
+                            href="{{ track.spotify_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="music-card-button"
+                        >
+                            Listen on Spotify
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% elif most_predicted_genre != "—" %}
+        <p>No tracks found for this genre.</p>
+    {% else %}
+        <p>Make a prediction to discover music.</p>
+    {% endif %}
+</section>
     <section class="recent-section">
 
         <div class="section-header">

@@ -10,10 +10,22 @@ from ml.predictor import predict_file
 from argon2.exceptions import VerifyMismatchError
 from datetime import datetime, timezone
 from dotenv import load_dotenv
+from authlib.integrations.flask_client import OAuth
+from spotify_service import get_spotify_token, search_tracks
 
 load_dotenv()
 app = Flask(__name__)
+oauth = OAuth(app)
 
+google = oauth.register(
+    name="google",
+    client_id=os.environ["GOOGLE_CLIENT_ID"],
+    client_secret=os.environ["GOOGLE_CLIENT_SECRET"],
+    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+    client_kwargs={
+        "scope": "openid email profile"
+    }
+)
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 
@@ -27,11 +39,64 @@ minio_client = Minio(
     secret_key=os.environ["MINIO_SECRET_KEY"],
     secure=False
 )
+@app.route("/spotify/test")
+def spotify_test():
+    tracks = search_tracks("pop", 5)
 
+    return str([
+        {
+            "name": track["name"],
+            "artist": ", ".join(
+                artist["name"] for artist in track["artists"]
+            ),
+            "album": track["album"]["name"],
+            "image": track["album"]["images"][0]["url"]
+            if track["album"]["images"]
+            else None,
+            "spotify_url": track["external_urls"]["spotify"]
+        }
+        for track in tracks
+    ])
 
 @app.route("/")
 def login_page():
     return render_template("login.html")
+@app.route("/auth/google")
+def google_login():
+    redirect_uri = url_for("google_callback", _external=True)
+    return google.authorize_redirect(redirect_uri)
+@app.route("/auth/google/callback")
+def google_callback():
+    token = google.authorize_access_token()
+    userinfo = token["userinfo"]
+
+    google_id = userinfo["sub"]
+    email = userinfo["email"]
+    name = userinfo.get("name", email)
+
+    user = User.query.filter_by(
+        auth_provider="google",
+        provider_user_id=google_id
+    ).first()
+
+    if not user:
+        user = User.query.filter_by(email=email).first()
+
+    if not user:
+        user = User(
+            name=name,
+            email=email,
+            password_hash=None,
+            auth_provider="google",
+            provider_user_id=google_id,
+            created_at=datetime.now(timezone.utc)
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    session["user_id"] = user.id
+
+    return redirect(url_for("home"))
 @app.route("/logout")
 def logout():
     session.clear()
@@ -131,6 +196,12 @@ def login():
                 error="Invalid email or password"
             )
 
+        if user.auth_provider != "email" or not user.password_hash:
+            return render_template(
+                "login.html",
+                error="This account uses Google Sign-In"
+            )
+
         try:
             password_hasher.verify(user.password_hash, password)
         except VerifyMismatchError:
@@ -158,15 +229,21 @@ def signup():
             return render_template(
                 "signup.html",
                 error="Passwords do not match"
-                )
+            )
 
         existing_user = User.query.filter_by(email=email).first()
 
         if existing_user:
-             return render_template(
-                "signup.html",
-                error="Email already registered"
+            if existing_user.auth_provider == "google":
+                return render_template(
+                    "signup.html",
+                    error="This email uses Google Sign-In"
                 )
+
+            return render_template(
+                "signup.html",
+                error="Email already exists. Please log in."
+            )
 
         password_hash = password_hasher.hash(password)
 
@@ -181,6 +258,7 @@ def signup():
 
         db.session.add(user)
         db.session.commit()
+        session["user_id"] = user.id
 
         return redirect(url_for("home"))
 
@@ -218,6 +296,14 @@ def dashboard():
         if most_predicted
         else "—"
     )
+
+    spotify_tracks = []
+
+    if most_predicted:
+        spotify_tracks = search_tracks(
+            most_predicted.predicted_genre.lower(),
+            10
+        )
 
     avg_agreement = (
         db.session.query(
@@ -289,9 +375,9 @@ def dashboard():
         avg_agreement=avg_agreement,
         genre_distribution=genre_distribution,
         activity=activity,
-        recent_predictions=recent_predictions
+        recent_predictions=recent_predictions,
+        spotify_tracks=spotify_tracks
     )
-
 @app.route("/upload", methods=["POST"])
 def upload():
     if "user_id" not in session:
