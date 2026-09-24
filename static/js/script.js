@@ -3,6 +3,8 @@ const fileName = document.getElementById("fileName");
 const audioPlayer = document.getElementById("audioPlayer");
 const predictButton = document.getElementById("predictButton");
 
+const uploadUrl = predictButton.dataset.uploadUrl;
+
 audioFile.addEventListener("change", function () {
     const file = audioFile.files[0];
 
@@ -10,7 +12,6 @@ audioFile.addEventListener("change", function () {
         fileName.textContent = file.name;
 
         const audioURL = URL.createObjectURL(file);
-
         audioPlayer.src = audioURL;
         audioPlayer.style.display = "block";
 
@@ -35,7 +36,7 @@ predictButton.addEventListener("click", async function () {
     predictButton.textContent = "Uploading...";
 
     try {
-        const response = await fetch("/upload", {
+        const response = await fetch(uploadUrl, {
             method: "POST",
             body: formData
         });

@@ -9,6 +9,9 @@
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/style.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/css/tom-select.css">
 </head>
 
 <body>
@@ -21,9 +24,9 @@
 
         <div class="nav-links">
             <a href="{{ url_for('home') }}">Home</a>
-            <a href="{{ url_for('dashboard') }}">Dashboard</a>
-            <a href="{{ url_for('profile') }}">Profile</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('profile.profile') }}">Profile</a>
+            <a href="{{ url_for('auth.logout') }}">Logout</a>
         </div>
 
     </nav>
@@ -38,23 +41,153 @@
 
                 <div class="profile-info">
 
-                    <h2>User Details</h2>
+                    <div class="profile-section-header">
+                        <h2>User Details</h2>
+
+                        <button
+                            type="button"
+                            class="edit-profile-btn"
+                            id="edit-profile-btn"
+                            onclick="enableProfileEdit()">
+                            Edit
+                        </button>
+                    </div>
 
                     <div class="detail-row">
                         <span class="detail-label">Name:</span>
-                        <span class="detail-value">{{ user.name }}</span>
+                        <span class="detail-value">
+                            {{ user.name }}
+                        </span>
                     </div>
 
                     <div class="detail-row">
                         <span class="detail-label">Email:</span>
-                        <span class="detail-value">{{ user.email }}</span>
+                        <span class="detail-value">
+                            {{ user.email }}
+                        </span>
                     </div>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('profile.update_country') }}"
+                        id="country-form"
+                        class="country-form">
+
+                        <div class="detail-row">
+
+                            <span class="detail-label">
+                                Country:
+                            </span>
+
+                            <span class="detail-value">
+
+                                <span id="country-display">
+                                    {% if user.country %}
+                                        {{ user.country }}
+                                    {% else %}
+                                        Not selected
+                                    {% endif %}
+                                </span>
+
+                                <div id="country-edit" style="display: none;">
+
+                                    <select id="country" name="country">
+    <option value="">Select country</option>
+    <option value="AF" {% if user.country == "AF" %}selected{% endif %}>Afghanistan</option>
+    <option value="AL" {% if user.country == "AL" %}selected{% endif %}>Albania</option>
+    <option value="DZ" {% if user.country == "DZ" %}selected{% endif %}>Algeria</option>
+    <option value="AR" {% if user.country == "AR" %}selected{% endif %}>Argentina</option>
+    <option value="AU" {% if user.country == "AU" %}selected{% endif %}>Australia</option>
+    <option value="AT" {% if user.country == "AT" %}selected{% endif %}>Austria</option>
+    <option value="BD" {% if user.country == "BD" %}selected{% endif %}>Bangladesh</option>
+    <option value="BE" {% if user.country == "BE" %}selected{% endif %}>Belgium</option>
+    <option value="BR" {% if user.country == "BR" %}selected{% endif %}>Brazil</option>
+    <option value="CA" {% if user.country == "CA" %}selected{% endif %}>Canada</option>
+    <option value="CL" {% if user.country == "CL" %}selected{% endif %}>Chile</option>
+    <option value="CN" {% if user.country == "CN" %}selected{% endif %}>China</option>
+    <option value="CO" {% if user.country == "CO" %}selected{% endif %}>Colombia</option>
+    <option value="HR" {% if user.country == "HR" %}selected{% endif %}>Croatia</option>
+    <option value="CZ" {% if user.country == "CZ" %}selected{% endif %}>Czech Republic</option>
+    <option value="DK" {% if user.country == "DK" %}selected{% endif %}>Denmark</option>
+    <option value="EG" {% if user.country == "EG" %}selected{% endif %}>Egypt</option>
+    <option value="FI" {% if user.country == "FI" %}selected{% endif %}>Finland</option>
+    <option value="FR" {% if user.country == "FR" %}selected{% endif %}>France</option>
+    <option value="DE" {% if user.country == "DE" %}selected{% endif %}>Germany</option>
+    <option value="GR" {% if user.country == "GR" %}selected{% endif %}>Greece</option>
+    <option value="HK" {% if user.country == "HK" %}selected{% endif %}>Hong Kong</option>
+    <option value="HU" {% if user.country == "HU" %}selected{% endif %}>Hungary</option>
+    <option value="IS" {% if user.country == "IS" %}selected{% endif %}>Iceland</option>
+    <option value="IN" {% if user.country == "IN" %}selected{% endif %}>India</option>
+    <option value="ID" {% if user.country == "ID" %}selected{% endif %}>Indonesia</option>
+    <option value="IE" {% if user.country == "IE" %}selected{% endif %}>Ireland</option>
+    <option value="IL" {% if user.country == "IL" %}selected{% endif %}>Israel</option>
+    <option value="IT" {% if user.country == "IT" %}selected{% endif %}>Italy</option>
+    <option value="JP" {% if user.country == "JP" %}selected{% endif %}>Japan</option>
+    <option value="KE" {% if user.country == "KE" %}selected{% endif %}>Kenya</option>
+    <option value="KR" {% if user.country == "KR" %}selected{% endif %}>South Korea</option>
+    <option value="MY" {% if user.country == "MY" %}selected{% endif %}>Malaysia</option>
+    <option value="MX" {% if user.country == "MX" %}selected{% endif %}>Mexico</option>
+    <option value="MA" {% if user.country == "MA" %}selected{% endif %}>Morocco</option>
+    <option value="NL" {% if user.country == "NL" %}selected{% endif %}>Netherlands</option>
+    <option value="NZ" {% if user.country == "NZ" %}selected{% endif %}>New Zealand</option>
+    <option value="NG" {% if user.country == "NG" %}selected{% endif %}>Nigeria</option>
+    <option value="NO" {% if user.country == "NO" %}selected{% endif %}>Norway</option>
+    <option value="PK" {% if user.country == "PK" %}selected{% endif %}>Pakistan</option>
+    <option value="PE" {% if user.country == "PE" %}selected{% endif %}>Peru</option>
+    <option value="PH" {% if user.country == "PH" %}selected{% endif %}>Philippines</option>
+    <option value="PL" {% if user.country == "PL" %}selected{% endif %}>Poland</option>
+    <option value="PT" {% if user.country == "PT" %}selected{% endif %}>Portugal</option>
+    <option value="RO" {% if user.country == "RO" %}selected{% endif %}>Romania</option>
+    <option value="SA" {% if user.country == "SA" %}selected{% endif %}>Saudi Arabia</option>
+    <option value="RS" {% if user.country == "RS" %}selected{% endif %}>Serbia</option>
+    <option value="SG" {% if user.country == "SG" %}selected{% endif %}>Singapore</option>
+    <option value="SK" {% if user.country == "SK" %}selected{% endif %}>Slovakia</option>
+    <option value="SI" {% if user.country == "SI" %}selected{% endif %}>Slovenia</option>
+    <option value="ZA" {% if user.country == "ZA" %}selected{% endif %}>South Africa</option>
+    <option value="ES" {% if user.country == "ES" %}selected{% endif %}>Spain</option>
+    <option value="LK" {% if user.country == "LK" %}selected{% endif %}>Sri Lanka</option>
+    <option value="SE" {% if user.country == "SE" %}selected{% endif %}>Sweden</option>
+    <option value="CH" {% if user.country == "CH" %}selected{% endif %}>Switzerland</option>
+    <option value="TW" {% if user.country == "TW" %}selected{% endif %}>Taiwan</option>
+    <option value="TH" {% if user.country == "TH" %}selected{% endif %}>Thailand</option>
+    <option value="TR" {% if user.country == "TR" %}selected{% endif %}>Turkey</option>
+    <option value="UA" {% if user.country == "UA" %}selected{% endif %}>Ukraine</option>
+    <option value="AE" {% if user.country == "AE" %}selected{% endif %}>United Arab Emirates</option>
+    <option value="GB" {% if user.country == "GB" %}selected{% endif %}>United Kingdom</option>
+    <option value="US" {% if user.country == "US" %}selected{% endif %}>United States</option>
+    <option value="UY" {% if user.country == "UY" %}selected{% endif %}>Uruguay</option>
+    <option value="VE" {% if user.country == "VE" %}selected{% endif %}>Venezuela</option>
+    <option value="VN" {% if user.country == "VN" %}selected{% endif %}>Vietnam</option>
+</select>
+
+                                    <div class="profile-edit-actions">
+
+                                        <button
+                                            type="submit"
+                                            class="save-profile-btn">
+                                            Save
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="cancel-profile-btn"
+                                            onclick="cancelProfileEdit()">
+                                            Cancel
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+                            </span>
+
+                        </div>
+
+                    </form>
 
                 </div>
 
             </div>
-
-            <br>
 
             <h2>Prediction History</h2>
 
@@ -77,6 +210,7 @@
                         {% for prediction, audio_file, prediction_result in predictions %}
 
                             <tr>
+
                                 <td>
                                     {{ audio_file.original_filename }}
                                 </td>
@@ -94,15 +228,21 @@
                                 </td>
 
                                 <td>
-                                    <form method="POST"
-                                          action="{{ url_for('delete_prediction', prediction_id=prediction.id) }}">
 
-                                        <button type="submit" class="delete-btn">
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('prediction.delete_prediction', prediction_id=prediction.id) }}">
+
+                                        <button
+                                            type="submit"
+                                            class="delete-btn">
                                             Delete
                                         </button>
 
                                     </form>
+
                                 </td>
+
                             </tr>
 
                         {% endfor %}
@@ -125,11 +265,14 @@
 
                 <h2>Account</h2>
 
-                <form method="POST"
-                      action="{{ url_for('delete_account') }}"
-                      onsubmit="return confirm('Are you sure you want to delete your account?');">
+                <form
+                    method="POST"
+                    action="{{ url_for('prediction.delete_account') }}"
+                    onsubmit="return confirm('Are you sure you want to delete your account?');">
 
-                    <button type="submit" class="delete-account-btn">
+                    <button
+                        type="submit"
+                        class="delete-account-btn">
                         Delete Account
                     </button>
 
@@ -140,6 +283,34 @@
         </div>
 
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.4.3/dist/js/tom-select.complete.min.js"></script>
+
+    <script>
+        let countrySelect;
+
+        function enableProfileEdit() {
+            document.getElementById("country-display").style.display = "none";
+            document.getElementById("country-edit").style.display = "block";
+            document.getElementById("edit-profile-btn").style.display = "none";
+
+            if (!countrySelect) {
+                countrySelect = new TomSelect("#country", {
+                    create: false,
+                    allowEmptyOption: true,
+                    placeholder: "Select country",
+                    searchField: ["text"],
+                    maxOptions: null
+                });
+            }
+        }
+
+        function cancelProfileEdit() {
+            document.getElementById("country-display").style.display = "inline";
+            document.getElementById("country-edit").style.display = "none";
+            document.getElementById("edit-profile-btn").style.display = "inline-block";
+        }
+    </script>
 
 </body>
 

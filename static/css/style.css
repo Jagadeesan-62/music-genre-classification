@@ -729,3 +729,226 @@ td {
 .delete-account-btn:hover {
     background: #b02a37;
 }
+.profile-card {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 10px;
+}
+
+.profile-card h1 {
+    margin-bottom: 30px;
+}
+
+.profile-card h2 {
+    margin-bottom: 20px;
+}
+
+.profile-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.profile-section-header h2 {
+    margin: 0;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.detail-label {
+    width: 100px;
+    font-weight: 600;
+}
+
+.detail-value {
+    flex: 1;
+}
+
+.edit-profile-btn,
+.save-profile-btn,
+.cancel-profile-btn,
+.delete-btn,
+.delete-account-btn {
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.edit-profile-btn {
+    background: #333;
+    color: #fff;
+}
+
+.edit-profile-btn:hover {
+    background: #222;
+}
+
+.country-form {
+    width: 100%;
+}
+
+.country-form .ts-wrapper {
+    width: 250px;
+}
+
+.country-form .ts-control {
+    min-height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.country-form .ts-control input {
+    font-size: 14px;
+}
+
+.country-form .ts-dropdown {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.country-form .ts-dropdown .option {
+    padding: 8px 12px;
+}
+
+.country-form .ts-dropdown .active {
+    background: #f0f0f0;
+}
+
+.profile-edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.save-profile-btn {
+    background: #222;
+    color: #fff;
+}
+
+.save-profile-btn:hover {
+    background: #000;
+}
+
+.cancel-profile-btn {
+    background: #e5e5e5;
+    color: #222;
+}
+
+.cancel-profile-btn:hover {
+    background: #d5d5d5;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.history-table th,
+.history-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.history-table th {
+    font-weight: 600;
+}
+
+.delete-btn {
+    background: #e5e5e5;
+    color: #222;
+}
+
+.delete-btn:hover {
+    background: #d5d5d5;
+}
+
+.account-actions {
+    margin-top: 40px;
+}
+
+.delete-account-btn {
+    background: #c62828;
+    color: #fff;
+}
+
+.delete-account-btn:hover {
+    background: #a91f1f;
+}
+
+@media (max-width: 600px) {
+    .profile-card {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .detail-label {
+        width: auto;
+    }
+
+    .country-form .ts-wrapper {
+        width: 100%;
+    }
+
+    .history-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+.dashboard-container {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+}
+
+.chart-card {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 300px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 700px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
