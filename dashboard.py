@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, session
-from models import db, User, Prediction, AudioFile, PredictionResult
+from models import db, UserPreference, Prediction, AudioFile, PredictionResult
 from sqlalchemy import func
 from spotify_service import search_tracks
 
+
 dashboard_bp = Blueprint("dashboard", __name__)
+
 
 @dashboard_bp.route("/dashboard")
 def dashboard():
@@ -11,7 +13,10 @@ def dashboard():
         return redirect(url_for("auth.login"))
 
     user_id = session["user_id"]
-    user = User.query.get(user_id)
+
+    preferences = UserPreference.query.filter_by(
+        user_id=user_id
+    ).first()
 
     total_predictions = (
         db.session.query(func.count(Prediction.id))
@@ -28,9 +33,15 @@ def dashboard():
             Prediction,
             Prediction.prediction_result_id == PredictionResult.id
         )
-        .filter(Prediction.user_id == user_id)
-        .group_by(PredictionResult.predicted_genre)
-        .order_by(func.count(Prediction.id).desc())
+        .filter(
+            Prediction.user_id == user_id
+        )
+        .group_by(
+            PredictionResult.predicted_genre
+        )
+        .order_by(
+            func.count(Prediction.id).desc()
+        )
         .first()
     )
 
@@ -40,15 +51,28 @@ def dashboard():
         else "—"
     )
 
-    spotify_tracks = []
+    preferred_languages = []
+
+    if preferences and preferences.preferred_languages:
+        preferred_languages = [
+            language.strip()
+            for language in preferences.preferred_languages.split(",")
+            if language.strip()
+        ]
+
+    spotify_tracks = {}
 
     if most_predicted:
-        market = user.country or "US"
+        market = (
+            preferences.country
+            if preferences and preferences.country
+            else "US"
+        )
 
         spotify_tracks = search_tracks(
             most_predicted.predicted_genre.lower(),
-            10,
-            market=market
+            market=market,
+            languages=preferred_languages
         )
 
     avg_agreement = (
@@ -62,11 +86,17 @@ def dashboard():
             Prediction,
             Prediction.prediction_result_id == PredictionResult.id
         )
-        .filter(Prediction.user_id == user_id)
+        .filter(
+            Prediction.user_id == user_id
+        )
         .scalar()
     )
 
-    avg_agreement = round(avg_agreement, 1) if avg_agreement else 0
+    avg_agreement = (
+        round(avg_agreement, 1)
+        if avg_agreement
+        else 0
+    )
 
     genre_distribution = (
         db.session.query(
@@ -77,9 +107,15 @@ def dashboard():
             Prediction,
             Prediction.prediction_result_id == PredictionResult.id
         )
-        .filter(Prediction.user_id == user_id)
-        .group_by(PredictionResult.predicted_genre)
-        .order_by(func.count(Prediction.id).desc())
+        .filter(
+            Prediction.user_id == user_id
+        )
+        .group_by(
+            PredictionResult.predicted_genre
+        )
+        .order_by(
+            func.count(Prediction.id).desc()
+        )
         .all()
     )
 
@@ -88,9 +124,15 @@ def dashboard():
             func.date(Prediction.created_at),
             func.count(Prediction.id)
         )
-        .filter(Prediction.user_id == user_id)
-        .group_by(func.date(Prediction.created_at))
-        .order_by(func.date(Prediction.created_at))
+        .filter(
+            Prediction.user_id == user_id
+        )
+        .group_by(
+            func.date(Prediction.created_at)
+        )
+        .order_by(
+            func.date(Prediction.created_at)
+        )
         .all()
     )
 
@@ -108,8 +150,12 @@ def dashboard():
             PredictionResult,
             Prediction.prediction_result_id == PredictionResult.id
         )
-        .filter(Prediction.user_id == user_id)
-        .order_by(Prediction.created_at.desc())
+        .filter(
+            Prediction.user_id == user_id
+        )
+        .order_by(
+            Prediction.created_at.desc()
+        )
         .limit(5)
         .all()
     )
@@ -122,5 +168,6 @@ def dashboard():
         genre_distribution=genre_distribution,
         activity=activity,
         recent_predictions=recent_predictions,
-        spotify_tracks=spotify_tracks
+        spotify_tracks=spotify_tracks,
+        preferred_languages=preferred_languages
     )

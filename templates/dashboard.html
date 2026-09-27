@@ -9,109 +9,184 @@
           href="{{ url_for('static', filename='css/style.css') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-.music-discovery {
-    width: 100%;
-    margin-top: 30px;
-}
+        .music-discovery {
+            width: 100%;
+            margin-top: 30px;
+        }
 
-.music-discovery-header {
-    margin-bottom: 18px;
-}
+        .music-discovery-header {
+            margin-bottom: 18px;
+        }
 
-.music-discovery-header h2 {
-    margin: 0 0 6px;
-    font-size: 20px;
-}
+        .music-discovery-header h2 {
+            margin: 0 0 6px;
+            font-size: 20px;
+        }
 
-.music-discovery-header p {
-    margin: 0;
-    color: #777;
-    font-size: 13px;
-}
+        .music-discovery-header p {
+            margin: 0;
+            color: #777;
+            font-size: 13px;
+        }
 
-.music-discovery-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
-}
+        .language-filter {
+            margin-bottom: 20px;
+        }
 
-.music-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    padding: 12px;
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 10px;
-}
+        .language-filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
 
-.music-card-image {
-    width: 90px !important;
-    height: 90px !important;
-    min-width: 90px;
-    max-width: 90px;
-    object-fit: cover;
-    border-radius: 7px;
-    display: block;
-}
+        .language-option {
+            position: relative;
+            cursor: pointer;
+        }
 
-.music-card-body {
-    flex: 1;
-    min-width: 0;
-}
+        .language-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
 
-.music-card-body h3 {
-    margin: 0 0 5px;
-    font-size: 15px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .language-option span {
+            display: inline-block;
+            padding: 7px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            color: #333;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.15s ease;
+        }
 
-.music-card-body p {
-    margin: 0 0 4px;
-    font-size: 13px;
-    color: #333;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .language-option span:hover {
+            border-color: #aaa;
+        }
 
-.music-card-body span {
-    display: block;
-    margin-bottom: 10px;
-    font-size: 12px;
-    color: #888;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .language-option input:checked + span {
+            background: #111;
+            color: #fff;
+            border-color: #111;
+        }
 
-.music-card-button {
-    display: inline-block;
-    padding: 6px 10px;
-    border-radius: 5px;
-    background: #111;
-    color: #fff;
-    text-decoration: none;
-    font-size: 11px;
-}
+        .language-option input:focus-visible + span {
+            outline: 2px solid #999;
+            outline-offset: 2px;
+        }
 
-.music-card-button:hover {
-    opacity: 0.85;
-}
+        .apply-language-btn {
+            display: inline-block;
+            padding: 7px 14px;
+            border: none;
+            border-radius: 6px;
+            background: #111;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
 
-@media (max-width: 700px) {
-    .music-discovery-grid {
-        grid-template-columns: 1fr;
-    }
-}
-</style>
+        .apply-language-btn:hover {
+            opacity: 0.85;
+        }
+
+        .music-discovery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .music-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
+            padding: 12px;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+        }
+
+        .music-card-image {
+            width: 90px !important;
+            height: 90px !important;
+            min-width: 90px;
+            max-width: 90px;
+            object-fit: cover;
+            border-radius: 7px;
+            display: block;
+        }
+
+        .music-card-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .music-card-body h3 {
+            margin: 0 0 5px;
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-card-body p {
+            margin: 0 0 4px;
+            font-size: 13px;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-card-body span {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-card-button {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 5px;
+            background: #111;
+            color: #fff;
+            text-decoration: none;
+            font-size: 11px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .music-card-button:hover {
+            opacity: 0.85;
+        }
+
+        .no-language-selected {
+            display: none;
+            margin: 10px 0 0;
+            color: #777;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .music-discovery-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -137,6 +212,7 @@
     </div>
 
     <section class="stats-grid">
+
         <div class="stat-card">
             <h3>Total Predictions</h3>
             <div class="stat-value">{{ total_predictions }}</div>
@@ -154,6 +230,7 @@
             <div class="stat-value">{{ avg_agreement }}%</div>
             <p>Prediction agreement</p>
         </div>
+
     </section>
 
     <section class="charts-grid">
@@ -179,87 +256,215 @@
                 <canvas id="activityChart"></canvas>
             </div>
         </div>
-    
+
     </section>
+
     <section class="music-discovery">
-    <div class="music-discovery-header">
-        <h2>Discover More</h2>
-        <p>Based on your most predicted genre: <strong>{{ most_predicted_genre|title }}</strong></p>
-    </div>
 
-    {% if spotify_tracks %}
-        <div class="music-discovery-grid">
-            {% for track in spotify_tracks %}
-                <div class="music-card">
-                    <img
-                        src="{{ track.image }}"
-                        alt="{{ track.name }}"
-                        class="music-card-image"
-                    >
+        <div class="music-discovery-header">
+            <h2>Discover More</h2>
 
-                    <div class="music-card-body">
-                        <h3>{{ track.name }}</h3>
-                        <p>{{ track.artist }}</p>
-                        <span>{{ track.album }}</span>
-
-                        <a
-                            href="{{ track.spotify_url }}"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="music-card-button"
-                        >
-                            Listen on Spotify
-                        </a>
-                    </div>
-                </div>
-            {% endfor %}
+            <p>
+                Based on your most predicted genre:
+                <strong>{{ most_predicted_genre|title }}</strong>
+            </p>
         </div>
-    {% elif most_predicted_genre != "—" %}
-        <p>No tracks found for this genre.</p>
-    {% else %}
-        <p>Make a prediction to discover music.</p>
-    {% endif %}
-</section>
+
+        {% if preferred_languages and spotify_tracks %}
+
+            <div class="language-filter">
+
+                <div class="language-filter-options">
+
+                    {% for language in preferred_languages %}
+
+                        <label class="language-option">
+
+                            <input
+                                type="checkbox"
+                                value="{{ language }}"
+                                checked
+                            >
+
+                            <span>
+                                {{ language }}
+                            </span>
+
+                        </label>
+
+                    {% endfor %}
+
+                </div>
+
+                <button
+                    type="button"
+                    id="apply-language-filter"
+                    class="apply-language-btn"
+                >
+                    Apply
+                </button>
+
+                <p
+                    id="no-language-selected"
+                    class="no-language-selected"
+                >
+                    Select at least one language.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+        {% if spotify_tracks %}
+
+            <div
+                id="music-discovery-grid"
+                class="music-discovery-grid"
+            >
+
+                {% for language, tracks in spotify_tracks.items() %}
+
+                    {% for track in tracks %}
+
+                        <div
+                            class="music-card"
+                            data-language="{{ language }}"
+                            data-track-id="{{ track.id }}"
+                        >
+
+                            <img
+                                src="{{ track.image }}"
+                                alt="{{ track.name }}"
+                                class="music-card-image"
+                            >
+
+                            <div class="music-card-body">
+
+                                <h3>
+                                    {{ track.name }}
+                                </h3>
+
+                                <p>
+                                    {{ track.artist }}
+                                </p>
+
+                                <span>
+                                    {{ track.album }}
+                                </span>
+
+                                <a
+                                    href="{{ track.spotify_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="music-card-button"
+                                >
+                                    Listen on Spotify
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endfor %}
+
+            </div>
+
+        {% elif most_predicted_genre != "—" %}
+
+            <p>
+                No tracks found for this genre.
+            </p>
+
+        {% else %}
+
+            <p>
+                Make a prediction to discover music.
+            </p>
+
+        {% endif %}
+
+    </section>
+
     <section class="recent-section">
 
         <div class="section-header">
+
             <h2>Recent Predictions</h2>
 
             <a href="{{ url_for('profile.profile') }}">
                 View History
             </a>
+
         </div>
 
         <div class="table-container">
+
             <table>
+
                 <thead>
+
                     <tr>
                         <th>Song</th>
                         <th>Genre</th>
                         <th>Agreement</th>
                         <th>Date</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
-    {% if recent_predictions %}
-        {% for prediction, audio_file, prediction_result in recent_predictions %}
-            <tr>
-                <td>{{ audio_file.original_filename }}</td>
-                <td><span class="genre-badge">{{ prediction_result.predicted_genre }}</span></td>
-                <td>
-                    {{ ((prediction_result.winning_votes / prediction_result.total_segments) * 100)|round(1) }}%
-                </td>
-                <td>{{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}</td>
-            </tr>
-        {% endfor %}
-    {% else %}
-        <tr>
-            <td colspan="4">No predictions yet.</td>
-        </tr>
-    {% endif %}
-</tbody>
+
+                    {% if recent_predictions %}
+
+                        {% for prediction, audio_file, prediction_result in recent_predictions %}
+
+                            <tr>
+
+                                <td>
+                                    {{ audio_file.original_filename }}
+                                </td>
+
+                                <td>
+                                    <span class="genre-badge">
+                                        {{ prediction_result.predicted_genre }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{
+                                        (
+                                            (
+                                                prediction_result.winning_votes
+                                                / prediction_result.total_segments
+                                            ) * 100
+                                        )|round(1)
+                                    }}%
+                                </td>
+
+                                <td>
+                                    {{ prediction.created_at.strftime('%d %b %Y, %H:%M') }}
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    {% else %}
+
+                        <tr>
+                            <td colspan="4">
+                                No predictions yet.
+                            </td>
+                        </tr>
+
+                    {% endif %}
+
+                </tbody>
+
             </table>
+
         </div>
 
     </section>
@@ -267,73 +472,277 @@
 </main>
 
 <script>
-const genreLabels = [
-    {% for genre, count in genre_distribution %}
-        "{{ genre }}"{% if not loop.last %},{% endif %}
-    {% endfor %}
-];
+    const genreLabels = [
+        {% for genre, count in genre_distribution %}
+            "{{ genre }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-const genreData = [
-    {% for genre, count in genre_distribution %}
-        {{ count }}{% if not loop.last %},{% endif %}
-    {% endfor %}
-];
+    const genreData = [
+        {% for genre, count in genre_distribution %}
+            {{ count }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-const activityLabels = [
-    {% for date, count in activity %}
-        "{{ date.strftime('%d %b') }}"{% if not loop.last %},{% endif %}
-    {% endfor %}
-];
+    const activityLabels = [
+        {% for date, count in activity %}
+            "{{ date.strftime('%d %b') }}"{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-const activityData = [
-    {% for date, count in activity %}
-        {{ count }}{% if not loop.last %},{% endif %}
-    {% endfor %}
-];
+    const activityData = [
+        {% for date, count in activity %}
+            {{ count }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
 
-new Chart(document.getElementById("genreChart"), {
-    type: "doughnut",
-    data: {
-        labels: genreLabels,
-        datasets: [{
-            data: genreData
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: "bottom"
-            }
-        }
-    }
-});
+    new Chart(
+        document.getElementById("genreChart"),
+        {
+            type: "doughnut",
 
-new Chart(document.getElementById("activityChart"), {
-    type: "line",
-    data: {
-        labels: activityLabels,
-        datasets: [{
-            label: "Predictions",
-            data: activityData,
-            tension: 0.3,
-            fill: false
-        }]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    precision: 0
+            data: {
+                labels: genreLabels,
+
+                datasets: [{
+                    data: genreData
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
                 }
             }
         }
+    );
+
+    new Chart(
+        document.getElementById("activityChart"),
+        {
+            type: "line",
+
+            data: {
+                labels: activityLabels,
+
+                datasets: [{
+                    label: "Predictions",
+                    data: activityData,
+                    tension: 0.3,
+                    fill: false
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    const languageCheckboxes =
+        Array.from(
+            document.querySelectorAll(
+                ".language-option input"
+            )
+        );
+
+    const applyLanguageButton =
+        document.getElementById(
+            "apply-language-filter"
+        );
+
+    const noLanguageMessage =
+        document.getElementById(
+            "no-language-selected"
+        );
+
+    const musicGrid =
+        document.getElementById(
+            "music-discovery-grid"
+        );
+
+    const musicCards =
+        Array.from(
+            document.querySelectorAll(
+                ".music-card"
+            )
+        );
+
+    function getTracksByLanguage() {
+        const tracks = {};
+
+        musicCards.forEach(card => {
+            const language =
+                card.dataset.language;
+
+            if (!tracks[language]) {
+                tracks[language] = [];
+            }
+
+            tracks[language].push(card);
+        });
+
+        return tracks;
     }
-});
+
+    function calculateDistribution(
+        languageCount
+    ) {
+        const distribution = [];
+
+        const base =
+            Math.floor(
+                10 / languageCount
+            );
+
+        const remainder =
+            10 % languageCount;
+
+        for (
+            let i = 0;
+            i < languageCount;
+            i++
+        ) {
+            distribution.push(
+                base + (
+                    i < remainder
+                        ? 1
+                        : 0
+                )
+            );
+        }
+
+        return distribution;
+    }
+
+    function getSelectedLanguages() {
+        return languageCheckboxes
+            .filter(
+                checkbox => checkbox.checked
+            )
+            .map(
+                checkbox => checkbox.value
+            );
+    }
+
+    function displayTracks(
+        selectedLanguages
+    ) {
+        musicCards.forEach(card => {
+            card.style.display = "none";
+        });
+
+        if (!selectedLanguages.length) {
+            noLanguageMessage.style.display =
+                "block";
+
+            return;
+        }
+
+        noLanguageMessage.style.display =
+            "none";
+
+        const tracksByLanguage =
+            getTracksByLanguage();
+
+        const distribution =
+            calculateDistribution(
+                selectedLanguages.length
+            );
+
+        const selectedTracksByLanguage = {};
+
+        selectedLanguages.forEach(
+            (language, languageIndex) => {
+                const tracks =
+                    tracksByLanguage[language]
+                    || [];
+
+                const limit =
+                    distribution[
+                        languageIndex
+                    ];
+
+                selectedTracksByLanguage[
+                    language
+                ] = tracks.slice(
+                    0,
+                    limit
+                );
+            }
+        );
+
+        const maxRounds =
+            Math.max(
+                ...distribution
+            );
+
+        for (
+            let round = 0;
+            round < maxRounds;
+            round++
+        ) {
+            selectedLanguages.forEach(
+                language => {
+                    const tracks =
+                        selectedTracksByLanguage[
+                            language
+                        ];
+
+                    if (
+                        tracks
+                        && tracks[round]
+                    ) {
+                        const card =
+                            tracks[round];
+
+                        card.style.display = "";
+
+                        musicGrid.appendChild(
+                            card
+                        );
+                    }
+                }
+            );
+        }
+    }
+
+    if (
+        applyLanguageButton
+        && musicCards.length
+    ) {
+        applyLanguageButton.addEventListener(
+            "click",
+            function() {
+                const selectedLanguages =
+                    getSelectedLanguages();
+
+                displayTracks(
+                    selectedLanguages
+                );
+            }
+        );
+
+        displayTracks(
+            getSelectedLanguages()
+        );
+    }
 </script>
 
 </body>

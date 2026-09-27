@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
 from models import db, User, Prediction, AudioFile, PredictionResult, AudioObject
 from ml.predictor import predict_file
-from datetime import datetime, timezone
+from datetime import datetime, time, timezone
 import hashlib
 import uuid
 import os
 from io import BytesIO
+import time
+
 
 prediction_bp = Blueprint("prediction", __name__)
 
@@ -119,11 +121,17 @@ def upload():
         with open(temp_filename, "wb") as temp_file:
             temp_file.write(file_data)
 
+        start_time = time.perf_counter()
+
         try:
             result = predict_file(temp_filename)
         finally:
             if os.path.exists(temp_filename):
                 os.remove(temp_filename)
+
+        prediction_time = time.perf_counter() - start_time
+
+        print(f"ML prediction time: {prediction_time:.2f} seconds")
 
         prediction_result = PredictionResult(
             audio_object_id=audio_object.id,

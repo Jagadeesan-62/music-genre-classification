@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 
+
 db = SQLAlchemy()
 
 
@@ -12,8 +13,19 @@ class User(db.Model):
     password_hash = db.Column(db.String(255))
     auth_provider = db.Column(db.String(20), nullable=False)
     provider_user_id = db.Column(db.String(255))
-    country = db.Column(db.String(2),nullable=True)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False)
+
+
+class UserPreference(db.Model):
+    __tablename__ = "user_preferences"
+
+    user_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("users.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    country = db.Column(db.String(2), nullable=True)
+    preferred_languages = db.Column(db.Text, nullable=True)
 
 
 class AudioObject(db.Model):
