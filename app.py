@@ -1,12 +1,12 @@
 from flask import Flask, render_template, redirect, url_for, session
 from models import db
 import os
-from minio import Minio
 from dotenv import load_dotenv
 from authlib.integrations.flask_client import OAuth
 from auth import auth_bp
 from profile import profile_bp
 from dashboard import dashboard_bp
+import boto3
 from prediction import prediction_bp
 
 load_dotenv()
@@ -27,8 +27,15 @@ google = oauth.register(
 app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["MINIO_BUCKET"] = "data"
+app.config["S3_BUCKET"] = "music-genre-audio-396465333763-ap-south-1-an"
+app.config["S3_REGION"] = "ap-south-1"
 
+s3_client = boto3.client(
+    "s3",
+    region_name=app.config["S3_REGION"]
+)
+
+app.s3_client = s3_client
 db.init_app(app)
 
 app.register_blueprint(auth_bp)
@@ -36,14 +43,7 @@ app.register_blueprint(profile_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(prediction_bp)
 
-minio_client = Minio(
-    os.environ["MINIO_ENDPOINT"],
-    access_key=os.environ["MINIO_ACCESS_KEY"],
-    secret_key=os.environ["MINIO_SECRET_KEY"],
-    secure=False
-)
 
-app.minio_client = minio_client
 
 
 @app.route("/home")

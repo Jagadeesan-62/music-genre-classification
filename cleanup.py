@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta, timezone
 
-from app import app, minio_client
+from app import app
 from models import db, AudioObject, AudioFile, Prediction, PredictionResult
 
+
 GRACE_PERIOD_DAYS = 7
+
 
 with app.app_context():
     now = datetime.now(timezone.utc)
@@ -11,6 +13,7 @@ with app.app_context():
     audio_objects = AudioObject.query.all()
 
     for audio_object in audio_objects:
+
         audio_file = AudioFile.query.filter_by(
             audio_object_id=audio_object.id
         ).first()
@@ -30,7 +33,9 @@ with app.app_context():
                 has_prediction = True
                 break
 
+        # Object is still being used
         if audio_file or has_prediction:
+
             if audio_object.garbage_marked_at is not None:
                 audio_object.garbage_marked_at = None
 
@@ -38,6 +43,7 @@ with app.app_context():
                     f"UNMARK | AudioObject {audio_object.id} | "
                     f"{audio_object.object_key}"
                 )
+
             else:
                 print(
                     f"KEEP | AudioObject {audio_object.id} | "
@@ -46,7 +52,9 @@ with app.app_context():
 
             continue
 
+        # First time detecting an unused object
         if audio_object.garbage_marked_at is None:
+
             audio_object.garbage_marked_at = now
 
             print(
@@ -56,9 +64,11 @@ with app.app_context():
 
             continue
 
+        # Check grace period
         marked_age = now - audio_object.garbage_marked_at
 
         if marked_age < timedelta(days=GRACE_PERIOD_DAYS):
+
             remaining = timedelta(days=GRACE_PERIOD_DAYS) - marked_age
 
             print(
@@ -68,6 +78,7 @@ with app.app_context():
 
             continue
 
+        # Final safety check before deletion
         final_audio_file = AudioFile.query.filter_by(
             audio_object_id=audio_object.id
         ).first()
@@ -87,7 +98,9 @@ with app.app_context():
                 final_has_prediction = True
                 break
 
+        # Object became referenced again during grace period
         if final_audio_file or final_has_prediction:
+
             audio_object.garbage_marked_at = None
 
             print(
@@ -97,26 +110,31 @@ with app.app_context():
 
             continue
 
+        # Delete object from S3
         try:
-            minio_client.remove_object(
-                "data",
-                audio_object.object_key
+
+            app.s3_client.delete_object(
+                Bucket=app.config["S3_BUCKET"],
+                Key=audio_object.object_key
             )
 
             print(
-                f"DELETED FROM MINIO | AudioObject {audio_object.id} | "
+                f"DELETED FROM S3 | AudioObject {audio_object.id} | "
                 f"{audio_object.object_key}"
             )
 
         except Exception as e:
+
             print(
-                f"MINIO DELETE FAILED | AudioObject {audio_object.id} | "
+                f"S3 DELETE FAILED | AudioObject {audio_object.id} | "
                 f"{e}"
             )
 
             continue
 
+        # Delete related database records
         try:
+
             prediction_results = PredictionResult.query.filter_by(
                 audio_object_id=audio_object.id
             ).all()
@@ -135,6 +153,7 @@ with app.app_context():
             )
 
         except Exception as e:
+
             db.session.rollback()
 
             print(

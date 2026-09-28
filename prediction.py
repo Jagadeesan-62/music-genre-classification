@@ -5,7 +5,6 @@ from datetime import datetime, time, timezone
 import hashlib
 import uuid
 import os
-from io import BytesIO
 import time
 
 
@@ -82,12 +81,11 @@ def upload():
     else:
         object_key = f"audio/{uuid.uuid4()}_{file.filename}"
 
-        current_app.minio_client.put_object(
-            current_app.config["MINIO_BUCKET"],
-            object_key,
-            BytesIO(file_data),
-            length=len(file_data),
-            content_type=file.content_type or "audio/mpeg"
+        current_app.s3_client.put_object(
+            Bucket=current_app.config["S3_BUCKET"],
+            Key=object_key,
+            Body=file_data,
+            ContentType=file.content_type or "audio/mpeg"
         )
 
         audio_object = AudioObject(
